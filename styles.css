@@ -312,19 +312,18 @@ h1, h2, h3, p { margin: 0; }
 }
 
 @media (max-width: 959px) {
-  .hero { flex-direction: column; align-items: stretch; min-height: 0; padding: 112px 0 0; }
+  .hero { flex-direction: column; align-items: stretch; min-height: 0; padding: 76px 0 56px; }
   .hero::after { display: none; }
   .hero__img {
     position: static;
-    order: 2;
     height: auto;
-    aspect-ratio: 5 / 4;
-    max-height: 560px;
+    aspect-ratio: 1;
+    max-height: 600px;
     object-position: 100% 50%;
-    margin-top: 8px;
-    -webkit-mask-image: linear-gradient(transparent, #000 18%, #000 75%, transparent);
-    mask-image: linear-gradient(transparent, #000 18%, #000 75%, transparent);
+    -webkit-mask-image: linear-gradient(#000 55%, transparent 96%);
+    mask-image: linear-gradient(#000 55%, transparent 96%);
   }
+  .hero__inner { margin-top: clamp(-120px, -18vw, -56px); }
 }
 
 @media (max-width: 560px) {
