@@ -278,7 +278,7 @@
 
   new ResizeObserver(() => { resize(); if (reduce || (started && !raf)) scene(ctx, reduce ? Infinity : clock); }).observe(canvas);
   // The map is a fixed backdrop: it is visible once #delivery reaches the viewport (hero covers it before),
-  // and it is lit (full opacity) while the empty stage inside #delivery is on screen.
+  // and it is lit (full opacity) while #delivery is in the middle of the viewport.
   const layer = canvas.parentElement;
   new IntersectionObserver(([en]) => {
     visible = en.isIntersecting || en.boundingClientRect.top < 0;
@@ -287,7 +287,7 @@
   new IntersectionObserver(([en]) => {
     layer.classList.toggle('is-lit', en.isIntersecting);
     if (!started && (en.isIntersecting || en.boundingClientRect.top < 0)) { started = true; play(); }
-  }, { rootMargin: '-30% 0px -30% 0px' }).observe(document.querySelector('.delivery__stage'));
+  }, { rootMargin: '-15% 0px -15% 0px' }).observe(document.querySelector('#delivery'));
   document.fonts?.ready.then(() => { cache = null; if (reduce) scene(ctx, Infinity); });
 })();
 
