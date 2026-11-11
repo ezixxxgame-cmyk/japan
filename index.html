@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JapanCar — авто под заказ из Японии, Кореи и Китая</title>
+  <meta name="description" content="Подбор, проверка, растаможка и доставка автомобилей из Японии, Кореи и Китая в любой город России.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@600;700;800&display=swap&subset=cyrillic">
+  <link rel="stylesheet" href="styles.css">
+  <script src="main.js" defer></script>
+</head>
+<body>
+<!--
+  DIRECTION: тёмная «ночная стоянка» из референсов: глубокий сине-чёрный, один сигнальный красный, широкий гротеск капсом.
+  FIRST VIEWPORT: машина с флагами справа, оффер и CTA слева. Сразу под ним — точечная карта РФ.
+  SIGNATURE: карта из точек проявляется от Владивостока на запад, по маршрутам бегут «машины» и зажигают города.
+  RISK: красный на тёмном легко уходит в «неон» — свечение только у кнопки и маршрутов.
+-->
+<header class="header">
+  <div class="container header__inner">
+    <a class="logo" href="#top" aria-label="JapanCar — на главную"><span>Japan</span>Car</a>
+    <nav class="nav" aria-label="Разделы">
+      <a href="#delivery">Доставка</a>
+      <a href="#process">Как работаем</a>
+      <a href="#countries">Откуда везём</a>
+      <a href="#reviews">Отзывы</a>
+      <a href="#lead">Контакты</a>
+    </nav>
+    <a class="header__phone" href="tel:+79000000000">+7 (900) 000-00-00</a>
+    <a class="btn btn--ghost btn--sm" href="#lead">Связаться</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <img class="hero__img" src="assets/hero.jpg" width="1280" height="714" alt="Чёрный седан Kia K5 на фоне флагов Японии, Китая и Кореи" fetchpriority="high">
+    <div class="container hero__inner">
+      <h1 class="hero__title">Авто<br> под заказ <span class="hero__from">из <em>Японии</em>, Кореи и&nbsp;Китая</span></h1>
+      <p class="hero__lead">Подберём машину на аукционе или у дилера, проверим, растаможим и доставим в ваш город. Под ключ и по договору.</p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="#lead">Подобрать авто</a>
+        <a class="btn btn--ghost" href="#process">Как мы работаем</a>
+      </div>
+      <p class="callout">
+        <span class="callout__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 4.6 3.3 8.3 8 9 4.7-.7 8-4.4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>
+        </span>
+        <span>Перед покупкой каждой машины —<strong>фото, видео и отчёт о состоянии</strong></span>
+      </p>
+    </div>
+  </section>
+
+  <section class="delivery" id="delivery" aria-labelledby="delivery-title">
+    <div class="map-bg">
+      <canvas role="img" aria-label="Карта доставки: из Японии, Кореи и Китая через Владивосток в Хабаровск, Иркутск, Новосибирск, Екатеринбург, Казань, Москву, Санкт-Петербург, Краснодар и другие города России"></canvas>
+    </div>
+    <div class="container delivery__head">
+      <h2 id="delivery-title" class="h2">Доставим в любой город России<span class="dot">.</span></h2>
+      <p>Из Японии и Кореи машина идёт морем во Владивосток, из Китая — по суше. Дальше автовоз или железная дорога до вашего города.</p>
+    </div>
+    <div class="container delivery__stage">
+      <p class="map__legend">
+        <span class="legend legend--sea">Морем и через границу</span>
+        <span class="legend legend--land">По России</span>
+      </p>
+    </div>
+  </section>
+
+  <section class="process" id="process" aria-labelledby="process-title">
+    <div class="container">
+      <h2 id="process-title" class="h2">Как мы работаем<span class="dot">.</span></h2>
+      <ol class="steps">
+        <li><h3>Заявка и бюджет</h3><p>Обсуждаем модель, год, комплектацию и бюджет. Считаем стоимость под ключ.</p></li>
+        <li><h3>Подбор и проверка</h3><p>Ищем варианты на аукционах и у дилеров, проверяем историю и состояние.</p></li>
+        <li><h3>Покупка и отправка</h3><p>Выкупаем машину после вашего согласия и отправляем во Владивосток.</p></li>
+        <li><h3>Таможня и документы</h3><p>Растамаживаем, оформляем СБКТС и ЭПТС.</p></li>
+        <li><h3>Доставка к вам</h3><p>Везём автовозом или по железной дороге. Принимаете машину и подписываете акт.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="countries" id="countries" aria-labelledby="countries-title">
+    <div class="container">
+      <h2 id="countries-title" class="h2">Откуда везём<span class="dot">.</span></h2>
+      <ul class="country-list">
+        <li>
+          <h3>Япония</h3>
+          <p>Аукционы USS, TAA, JU и другие. Toyota, Honda, Nissan, Subaru, Mazda, Lexus. У каждого лота есть аукционный лист с оценкой состояния.</p>
+          <span class="country-list__meta">Правый руль · с пробегом</span>
+        </li>
+        <li>
+          <h3>Корея</h3>
+          <p>Encar и дилеры. Hyundai, Kia, Genesis, а также европейские марки корейского рынка с понятной историей обслуживания.</p>
+          <span class="country-list__meta">Левый руль · с пробегом</span>
+        </li>
+        <li>
+          <h3>Китай</h3>
+          <p>Дилеры и экспортные площадки. Новые машины и электромобили: Li Auto, Zeekr, Geely, BYD, Haval, Chery.</p>
+          <span class="country-list__meta">Левый руль · новые и с пробегом</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ponytail: placeholder reviews for v1 layout, replace with real ones before launch. -->
+  <section class="reviews" id="reviews" aria-labelledby="reviews-title">
+    <div class="container">
+      <h2 id="reviews-title" class="h2">Отзывы клиентов<span class="dot">.</span></h2>
+      <ul class="review-list">
+        <li class="review">
+          <div class="review__who">
+            <span class="review__avatar" aria-hidden="true">АМ</span>
+            <div><h3>Алексей М.</h3><p>Toyota Harrier 2020 · Япония</p></div>
+          </div>
+          <p class="review__stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 100 20" aria-hidden="true"><use href="#stars"/></svg></p>
+          <blockquote>Искал Harrier в хорошей комплектации. Прислали несколько лотов с аукционными листами, по выбранному сняли видео. Растаможка сразу была в смете — доплачивать ничего не пришлось.</blockquote>
+          <p class="review__route">Владивосток <span aria-hidden="true"></span> Новосибирск</p>
+        </li>
+        <li class="review">
+          <div class="review__who">
+            <span class="review__avatar" aria-hidden="true">МК</span>
+            <div><h3>Марина К.</h3><p>Kia Sorento 2022 · Корея</p></div>
+          </div>
+          <p class="review__stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 100 20" aria-hidden="true"><use href="#stars"/></svg></p>
+          <blockquote>Боялась брать машину вслепую, но получила подробный отчёт по истории и состоянию. На каждом этапе писали, где сейчас машина. Забрала в Екатеринбурге — всё как на фото.</blockquote>
+          <p class="review__route">Владивосток <span aria-hidden="true"></span> Екатеринбург</p>
+        </li>
+        <li class="review">
+          <div class="review__who">
+            <span class="review__avatar" aria-hidden="true">ДС</span>
+            <div><h3>Дмитрий С.</h3><p>Li Auto L7 2024 · Китай</p></div>
+          </div>
+          <p class="review__stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 100 20" aria-hidden="true"><use href="#stars"/></svg></p>
+          <blockquote>Переживал за сертификацию и ЭПТС на гибрид. Документы оформили сами, я только подписал акт приёмки. По цене вышло заметно выгоднее, чем у дилеров в Москве.</blockquote>
+          <p class="review__route">Владивосток <span aria-hidden="true"></span> Москва</p>
+        </li>
+      </ul>
+    </div>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <symbol id="stars" viewBox="0 0 100 20"><path id="star" d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6L10 15l-5.4 3 1.2-6L1.3 7.8l6.1-.7z"/><use href="#star" x="20"/><use href="#star" x="40"/><use href="#star" x="60"/><use href="#star" x="80"/></symbol>
+    </svg>
+  </section>
+
+  <section class="lead" id="lead" aria-labelledby="lead-title">
+    <div class="container lead__inner">
+      <div class="lead__text">
+        <h2 id="lead-title" class="h2">Оставьте заявку на подбор<span class="dot">.</span></h2>
+        <p>Перезвоним, уточним пожелания и посчитаем стоимость под ключ — с доставкой в ваш город.</p>
+      </div>
+      <form class="form" novalidate>
+        <label class="field">
+          <span>Имя</span>
+          <input name="name" autocomplete="name" required>
+          <small class="field__error">Напишите, как к вам обращаться</small>
+        </label>
+        <label class="field">
+          <span>Телефон</span>
+          <input name="phone" type="tel" autocomplete="tel" inputmode="tel" required pattern="[\d\s()+\-]{10,}">
+          <small class="field__error">Нужен номер, чтобы перезвонить, например +7 900 123-45-67</small>
+        </label>
+        <label class="field">
+          <span>Какое авто ищете <i>— необязательно</i></span>
+          <textarea name="car" rows="3" placeholder="Марка, модель, год, бюджет"></textarea>
+        </label>
+        <label class="check">
+          <input type="checkbox" name="agree" required>
+          <span>Согласен на обработку персональных данных и с <a href="#">политикой конфиденциальности</a></span>
+        </label>
+        <button class="btn btn--primary" type="submit">Отправить заявку</button>
+        <p class="form__done" role="status" hidden>Заявка отправлена. Скоро перезвоним.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <a class="logo" href="#top"><span>Japan</span>Car</a>
+    <p>Авто под заказ из Японии, Кореи и Китая с доставкой по России.</p>
+    <a class="footer__phone" href="tel:+79000000000">+7 (900) 000-00-00</a>
+    <small>© 2026 JapanCar</small>
+  </div>
+</footer>
+</body>
+</html>
