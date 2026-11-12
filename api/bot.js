@@ -1,11 +1,15 @@
 // Telegram admin bot (Vercel function). Stores site content in data.json in the GitHub repo;
 // every change is a commit, Vercel redeploys the site in ~1 min.
-// Env: BOT_TOKEN, GITHUB_TOKEN (contents: read/write), optional ADMIN_IDS (comma-separated Telegram user ids).
+// Leads from the site form (POST /api/bot?lead) go to admins and to leads.json in a PRIVATE repo:
+// they hold names and phones, the site repo is public.
+// Env: BOT_TOKEN, GITHUB_TOKEN (contents: read/write on both repos), optional ADMIN_IDS (comma-separated Telegram user ids).
 // Open GET /api/bot once to register the webhook.
 const crypto = require('crypto');
 
 const REPO = 'ezixxxgame-cmyk/japan';
+const LEADS_REPO = 'ezixxxgame-cmyk/japan-leads';
 const { BOT_TOKEN, GITHUB_TOKEN, ADMIN_IDS = '798834799,720301149' } = process.env;
+const admins = () => ADMIN_IDS.split(',').map(s => s.trim()).filter(Boolean);
 const SECRET = crypto.createHash('sha256').update(String(BOT_TOKEN)).digest('hex');
 
 const tg = (method, body) =>
@@ -15,28 +19,31 @@ const tg = (method, body) =>
     body: JSON.stringify(body),
   }).then(r => r.json());
 
-const gh = (path, init = {}) =>
-  fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+// Both repos are used on their default branch (main).
+const GH_HEADERS = { authorization: `Bearer ${GITHUB_TOKEN}`, accept: 'application/vnd.github+json', 'user-agent': 'japancar-bot' };
+const gh = (path, init = {}, repo = REPO) =>
+  fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
     ...init,
-    headers: { authorization: `Bearer ${GITHUB_TOKEN}`, accept: 'application/vnd.github+json', 'user-agent': 'japancar-bot' },
+    headers: GH_HEADERS,
   }).then(async r => {
-    if (!r.ok) throw new Error(`GitHub ${r.status}: ${(await r.text()).slice(0, 200)}`);
+    if (!r.ok) throw Object.assign(new Error(`GitHub ${r.status} (${repo}): ${(await r.text()).slice(0, 200)}`), { status: r.status });
     return r.json();
   });
 
-const put = (path, content, message, sha) =>
-  gh(path, { method: 'PUT', body: JSON.stringify({ message, content: content.toString('base64'), sha, branch: 'main' }) });
+const put = (path, content, message, sha, repo) =>
+  gh(path, { method: 'PUT', body: JSON.stringify({ message, content: content.toString('base64'), sha }) }, repo);
 
-async function load() {
-  const f = await gh('data.json?ref=main');
+async function load(path = 'data.json', repo = REPO) {
+  const f = await gh(path, {}, repo);
   return { sha: f.sha, json: JSON.parse(Buffer.from(f.content, 'base64').toString('utf8')) };
 }
 
-const save = (data, message) => put('data.json', Buffer.from(JSON.stringify(data.json, null, 2) + '\n'), message, data.sha);
+const save = (data, message, path = 'data.json', repo = REPO) =>
+  put(path, Buffer.from(JSON.stringify(data.json, null, 2) + '\n'), message, data.sha, repo);
 
 async function removeFile(path) {
-  const f = await gh(`${path}?ref=main`);
-  await gh(path, { method: 'DELETE', body: JSON.stringify({ message: `bot: удалено фото ${path}`, sha: f.sha, branch: 'main' }) });
+  const f = await gh(path);
+  await gh(path, { method: 'DELETE', body: JSON.stringify({ message: `bot: удалено фото ${path}`, sha: f.sha }) });
 }
 
 async function download(fileId) {
@@ -81,12 +88,93 @@ const KINDS = {
 const KIND_BY_WORD = { авто: 'cars', отзыв: 'reviews' };
 const PROMPT_RE = /^(Добавить|Изменить) (авто|отзыв)(?: #(\w+))?/;
 
-const kb = buttons => buttons && { inline_keyboard: buttons.map(row => row.map(([text, data]) => ({ text, callback_data: data }))) };
+const kb = buttons => buttons ? { inline_keyboard: buttons.map(row => row.map(([text, data]) => ({ text, callback_data: data }))) } : undefined;
 const send = (chat, text, buttons) => tg('sendMessage', { chat_id: chat, text, parse_mode: 'HTML', reply_markup: kb(buttons) });
 
-async function menu(chat, text = 'Что редактируем на сайте?', json) {
+// Leads: leads.json in LEADS_REPO, an array with ascending numeric ids.
+const STATUS = { new: 'Новая', work: 'В работе', done: 'Завершена', lost: 'Отказ' };
+const isActive = l => l.status === 'new' || l.status === 'work';
+
+const loadLeads = () => load('leads.json', LEADS_REPO).catch(async e => {
+  if (e.status !== 404) throw e;
+  // 404 means "no leads.json yet" or "no access to the repo" — tell them apart.
+  const repo = await fetch(`https://api.github.com/repos/${LEADS_REPO}`, { headers: GH_HEADERS });
+  if (!repo.ok) throw new Error(`нет доступа к приватному репозиторию ${LEADS_REPO}. Создайте его и дайте GITHUB_TOKEN право Contents: Read and write`);
+  return { json: [] };
+});
+const saveLeads = (data, message) => save(data, message, 'leads.json', LEADS_REPO);
+
+async function addLead(lead) {
+  // Two visitors at once = sha conflict; reload and retry so no lead is lost.
+  for (let attempt = 1; ; attempt++) {
+    const data = await loadLeads();
+    lead.id = (data.json.length ? data.json[data.json.length - 1].id : 0) + 1;
+    try {
+      return await saveLeads({ ...data, json: [...data.json, lead] }, `lead #${lead.id}`);
+    } catch (e) {
+      if (![409, 422].includes(e.status) || attempt === 3) throw e;
+    }
+  }
+}
+
+const leadText = l => [
+  `<b>Заявка${l.id ? ` #${l.id}` : ''}</b> · ${STATUS[l.status]}`,
+  `Имя: ${esc(l.name)}`,
+  `Телефон: ${esc(l.phone)}`,
+  l.car && `Авто: ${esc(l.car)}`,
+  new Date(l.at).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) + ' МСК',
+].filter(Boolean).join('\n');
+
+const leadButtons = l => [
+  Object.keys(STATUS).filter(s => s !== l.status).map(s => [STATUS[s], `st:leads:${l.id}:${s}`]),
+  [['Активные заявки', 'list:leads']],
+];
+
+async function onLeadAction(chat, act, id, status) {
+  const data = await loadLeads();
+  if (act === 'list') {
+    const active = data.json.filter(isActive).reverse();
+    return send(chat, `Активные заявки: ${active.length || 'нет'}`, [
+      ...active.slice(0, 50).map(l => [[`#${l.id} ${l.name} · ${STATUS[l.status]}`.slice(0, 60), `view:leads:${l.id}`]]),
+      [['Назад', 'menu']],
+    ]);
+  }
+  const lead = data.json.find(l => l.id === id);
+  if (!lead) return menu(chat, 'Заявка не найдена.');
+  if (act === 'st' && STATUS[status] && lead.status !== status) {
+    lead.status = status;
+    await saveLeads(data, `lead #${id}: ${STATUS[status]}`);
+  }
+  return send(chat, leadText(lead), leadButtons(lead));
+}
+
+// ponytail: open endpoint without rate limit; add a honeypot or Turnstile if spam shows up.
+async function onLead(req, res) {
+  const b = req.body || {};
+  const str = (v, max) => String(v || '').trim().slice(0, max);
+  const lead = { name: str(b.name, 100), phone: str(b.phone, 30), car: str(b.car, 1000), status: 'new', at: new Date().toISOString() };
+  if (!lead.name || lead.phone.replace(/\D/g, '').length < 10) return res.status(400).json({ ok: false });
+
+  let note = '';
+  try {
+    await addLead(lead);
+  } catch (e) {
+    console.error(e);
+    delete lead.id;
+    note = `\n\nНе сохранилась в списке заявок: ${esc(e.message)}`;
+  }
+  const sent = await Promise.all(admins().map(id => send(id, leadText(lead) + note, lead.id && leadButtons(lead)).catch(() => ({}))));
+  if (!lead.id && !sent.some(r => r.ok)) return res.status(500).json({ ok: false });
+  res.status(200).json({ ok: true });
+}
+
+async function menu(chat, text = 'Что открыть?', json) {
   json = json || (await load()).json;
-  return send(chat, text, Object.entries(KINDS).map(([k, K]) => [[`${K.title} (${json[k].length})`, `list:${k}`]]));
+  const active = await loadLeads().then(d => d.json.filter(isActive).length, () => '?');
+  return send(chat, text, [
+    [[`Активные заявки (${active})`, 'list:leads']],
+    ...Object.entries(KINDS).map(([k, K]) => [[`${K.title} (${json[k].length})`, `list:${k}`]]),
+  ]);
 }
 
 function prompt(chat, kind, old, note = '') {
@@ -105,8 +193,9 @@ async function onCallback(q) {
   const chat = q.message.chat.id;
   await tg('answerCallbackQuery', { callback_query_id: q.id });
   await tg('deleteMessage', { chat_id: chat, message_id: q.message.message_id });
-  const [act, kind, id] = q.data.split(':');
+  const [act, kind, id, extra] = q.data.split(':');
   if (act === 'menu') return menu(chat);
+  if (kind === 'leads') return onLeadAction(chat, act, +id, extra);
   const K = KINDS[kind];
   if (act === 'add') return prompt(chat, kind);
 
@@ -177,6 +266,7 @@ async function onMessage(m) {
 }
 
 module.exports = async (req, res) => {
+  if (req.method === 'POST' && req.query && 'lead' in req.query) return onLead(req, res);
   if (req.method !== 'POST') {
     const r = await tg('setWebhook', {
       url: `https://${req.headers.host}/api/bot`, secret_token: SECRET, allowed_updates: ['message', 'callback_query'],
@@ -191,7 +281,7 @@ module.exports = async (req, res) => {
   const chat = u.message ? u.message.chat.id : u.callback_query && u.callback_query.message.chat.id;
   if (from && chat) {
     try {
-      if (!ADMIN_IDS.split(',').map(s => s.trim()).includes(String(from.id))) {
+      if (!admins().includes(String(from.id))) {
         await send(chat, `Нет доступа. Ваш Telegram ID: <code>${from.id}</code> — добавьте его в ADMIN_IDS на Vercel.`);
       } else if (u.callback_query) await onCallback(u.callback_query);
       else await onMessage(u.message);

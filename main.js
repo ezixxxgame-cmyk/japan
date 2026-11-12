@@ -326,8 +326,7 @@
   });
 })();
 
-// Lead form: client-side validation only.
-// ponytail: no backend yet — wire submit to Telegram bot / CRM / email when the channel is chosen.
+// Lead form: validation, then POST to the Telegram bot (api/bot.js), which notifies admins.
 (() => {
   const form = document.querySelector('.form');
   if (!form) return;
@@ -338,10 +337,25 @@
     return ok;
   };
   fields.forEach(el => el.addEventListener(el.type === 'checkbox' ? 'change' : 'blur', () => check(el)));
-  form.addEventListener('submit', ev => {
+  const btn = form.querySelector('button');
+  const fail = form.querySelector('.form__error');
+  form.addEventListener('submit', async ev => {
     ev.preventDefault();
     const bad = fields.filter(el => !check(el));
     if (bad.length) { bad[0].focus(); return; }
+    const label = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Отправляем…';
+    fail.hidden = true;
+    const { name, phone, car } = Object.fromEntries(new FormData(form));
+    const ok = await fetch('/api/bot?lead', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ name, phone, car }),
+    }).then(r => r.ok, () => false);
+    btn.disabled = false;
+    btn.textContent = label;
+    if (!ok) { fail.hidden = false; return; }
     form.querySelectorAll('label, button').forEach(el => (el.hidden = true));
     form.querySelector('.form__done').hidden = false;
   });

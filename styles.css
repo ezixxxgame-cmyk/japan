@@ -344,6 +344,9 @@ h1, h2, h3, p { margin: 0; }
 .lead__text p { max-width: 40ch; margin-top: 20px; color: var(--text-2); }
 .lead__text .btn { margin-top: 24px; }
 .form { display: grid; gap: 18px; max-width: 520px; }
+.form .btn:disabled { opacity: .6; cursor: progress; transform: none; }
+.form__error { color: #ff7a70; font-size: 15px; font-weight: 600; }
+.form__error a { color: var(--text); white-space: nowrap; }
 .field { display: grid; gap: 8px; }
 .field > span { font-size: 14px; font-weight: 600; }
 .field i { font-style: normal; font-weight: 400; color: var(--text-3); }
