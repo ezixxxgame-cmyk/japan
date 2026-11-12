@@ -342,6 +342,7 @@ h1, h2, h3, p { margin: 0; }
   mask-image: linear-gradient(90deg, transparent 4%, #000 50%, #000 66%, transparent 90%);
 }
 .lead__text p { max-width: 40ch; margin-top: 20px; color: var(--text-2); }
+.lead__text .btn { margin-top: 24px; }
 .form { display: grid; gap: 18px; max-width: 520px; }
 .field { display: grid; gap: 8px; }
 .field > span { font-size: 14px; font-weight: 600; }
@@ -375,7 +376,8 @@ h1, h2, h3, p { margin: 0; }
 .footer__inner { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 40px; }
 .footer .logo { margin-right: 0; }
 .footer p { flex: 1 1 280px; }
-.footer__phone { font-weight: 700; color: var(--text); text-decoration: none; }
+.footer__phone, .footer__link { font-weight: 700; color: var(--text); text-decoration: none; }
+.footer__link:hover { color: var(--accent); }
 
 @media (min-width: 720px) {
   .delivery__head, .stock__head { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
