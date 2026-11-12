@@ -281,7 +281,7 @@ h1, h2, h3, p { margin: 0; }
 .review__route span { flex: 1; border-top: 1px dashed rgba(255, 64, 52, .6); }
 
 /* FAQ */
-.faq { padding-block: var(--section); }
+.faq { padding-block: var(--section) 0; }
 .faq__inner { display: grid; gap: clamp(32px, 4vw, 56px); }
 .faq__list { border-bottom: 1px solid var(--line); }
 .faq details { border-top: 1px solid var(--line); }
@@ -317,27 +317,27 @@ h1, h2, h3, p { margin: 0; }
 }
 
 /* Lead */
-.lead { padding-block: 0 var(--section); overflow-x: clip; }
+.lead { padding-block: var(--section); overflow-x: clip; background: var(--bg); isolation: isolate; }
 .lead__inner { display: grid; gap: 40px; }
 .lead__inner > * { max-width: 560px; }
 .lead__car { position: relative; z-index: -1; }
-.lead__car img { width: 100%; height: auto; filter: drop-shadow(0 0 24px rgba(255, 64, 52, .22)); }
+.lead__car img { width: 100%; height: auto; mix-blend-mode: lighten; }
 .lead__car::before, .lead__car::after { content: ""; position: absolute; z-index: -1; pointer-events: none; }
 .lead__car::before {
-  inset: -25% -15% -15%;
+  inset: -35% -20% -30%;
   background:
-    radial-gradient(46% 12% at 40% 84%, rgba(255, 64, 52, .45), transparent 70%),
-    radial-gradient(closest-side, rgba(217, 34, 22, .24), transparent);
+    radial-gradient(40% 12% at 43% 78%, rgba(255, 64, 52, .18), rgba(150, 26, 32, .09) 45%, rgba(50, 18, 32, .03) 75%, transparent),
+    radial-gradient(closest-side, rgba(200, 34, 28, .15), rgba(140, 24, 34, .1) 30%, rgba(70, 20, 38, .06) 55%, rgba(28, 18, 34, .025) 80%, transparent);
 }
 .lead__car::after {
   left: -18%;
   right: 6%;
   top: -30%;
   height: 100%;
-  border-top: 2px solid #ff6a5c;
+  border-top: 1.5px solid rgba(255, 106, 92, .6);
   border-radius: 50%;
   transform: rotate(-9deg);
-  filter: drop-shadow(0 0 2px var(--accent)) drop-shadow(0 0 8px var(--accent)) drop-shadow(0 0 24px rgba(255, 64, 52, .7));
+  filter: drop-shadow(0 0 3px rgba(255, 64, 52, .5)) drop-shadow(0 0 16px rgba(255, 64, 52, .3));
   -webkit-mask-image: linear-gradient(90deg, transparent 4%, #000 50%, #000 66%, transparent 90%);
   mask-image: linear-gradient(90deg, transparent 4%, #000 50%, #000 66%, transparent 90%);
 }
