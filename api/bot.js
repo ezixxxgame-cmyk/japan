@@ -1,11 +1,11 @@
 // Telegram admin bot (Vercel function). Stores site content in data.json in the GitHub repo;
 // every change is a commit, Vercel redeploys the site in ~1 min.
-// Env: BOT_TOKEN, ADMIN_IDS (comma-separated Telegram user ids), GITHUB_TOKEN (contents: read/write).
+// Env: BOT_TOKEN, GITHUB_TOKEN (contents: read/write), optional ADMIN_IDS (comma-separated Telegram user ids).
 // Open GET /api/bot once to register the webhook.
 const crypto = require('crypto');
 
 const REPO = 'ezixxxgame-cmyk/japan';
-const { BOT_TOKEN, GITHUB_TOKEN, ADMIN_IDS = '' } = process.env;
+const { BOT_TOKEN, GITHUB_TOKEN, ADMIN_IDS = '798834799,720301149' } = process.env;
 const SECRET = crypto.createHash('sha256').update(String(BOT_TOKEN)).digest('hex');
 
 const tg = (method, body) =>
