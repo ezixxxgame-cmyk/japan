@@ -394,11 +394,12 @@ h1, h2, h3, p { margin: 0; }
   .lead__inner { grid-template-columns: minmax(0, 520px) minmax(0, 1fr); column-gap: 24px; }
   .lead__car {
     grid-column: 2;
-    grid-row: 1 / span 2;
-    align-self: end;
+    grid-row: 2;
+    align-self: center;
     max-width: 960px;
-    margin: 0 calc(16px - var(--gutter) - max(0px, (100vw - 1320px) / 2)) -48px 0;
+    margin-right: calc(16px - var(--gutter) - max(0px, (100vw - 1320px) / 2));
   }
+  .lead .form { grid-column: 1; }
 }
 
 @media (max-width: 1280px) {
