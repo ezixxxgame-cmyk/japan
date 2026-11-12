@@ -25,7 +25,9 @@
       <a href="#delivery">Доставка</a>
       <a href="#process">Как работаем</a>
       <a href="#countries">Откуда везём</a>
-      <a href="#reviews">Отзывы</a>
+      <a href="#stock" hidden>В наличии</a>
+      <a href="#reviews" hidden>Отзывы</a>
+      <a href="#faq">Вопросы</a>
       <a href="#lead">Контакты</a>
     </nav>
     <a class="header__phone" href="tel:+79000000000">+7 (900) 000-00-00</a>
@@ -104,43 +106,82 @@
     </div>
   </section>
 
-  <!-- ponytail: placeholder reviews for v1 layout, replace with real ones before launch. -->
-  <section class="reviews" id="reviews" aria-labelledby="reviews-title">
+  <section class="stock" id="stock" aria-labelledby="stock-title" hidden>
+    <div class="container">
+      <div class="stock__head">
+        <h2 id="stock-title" class="h2">В наличии<span class="dot">.</span></h2>
+        <p>Машины, которые можно купить без ожидания аукциона. Цена в карточке — конечная.</p>
+      </div>
+      <ul class="car-list"></ul>
+    </div>
+    <template id="tpl-car">
+      <li class="car">
+        <img class="car__img" alt="" width="1280" height="960" loading="lazy">
+        <div class="car__body">
+          <h3></h3>
+          <p class="car__price"><span>Конечная цена</span> <b></b></p>
+          <p class="car__text"></p>
+          <a class="btn btn--ghost btn--sm car__cta" href="#lead">Узнать о машине</a>
+        </div>
+      </li>
+    </template>
+  </section>
+
+  <section class="reviews" id="reviews" aria-labelledby="reviews-title" hidden>
     <div class="container">
       <h2 id="reviews-title" class="h2">Отзывы клиентов<span class="dot">.</span></h2>
-      <ul class="review-list">
-        <li class="review">
-          <div class="review__who">
-            <span class="review__avatar" aria-hidden="true">АМ</span>
-            <div><h3>Алексей М.</h3><p>Toyota Harrier 2020 · Япония</p></div>
-          </div>
-          <p class="review__stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 100 20" aria-hidden="true"><use href="#stars"/></svg></p>
-          <blockquote>Искал Harrier в хорошей комплектации. Прислали несколько лотов с аукционными листами, по выбранному сняли видео. Растаможка сразу была в смете — доплачивать ничего не пришлось.</blockquote>
-          <p class="review__route">Владивосток <span aria-hidden="true"></span> Новосибирск</p>
-        </li>
-        <li class="review">
-          <div class="review__who">
-            <span class="review__avatar" aria-hidden="true">МК</span>
-            <div><h3>Марина К.</h3><p>Kia Sorento 2022 · Корея</p></div>
-          </div>
-          <p class="review__stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 100 20" aria-hidden="true"><use href="#stars"/></svg></p>
-          <blockquote>Боялась брать машину вслепую, но получила подробный отчёт по истории и состоянию. На каждом этапе писали, где сейчас машина. Забрала в Екатеринбурге — всё как на фото.</blockquote>
-          <p class="review__route">Владивосток <span aria-hidden="true"></span> Екатеринбург</p>
-        </li>
-        <li class="review">
-          <div class="review__who">
-            <span class="review__avatar" aria-hidden="true">ДС</span>
-            <div><h3>Дмитрий С.</h3><p>Li Auto L7 2024 · Китай</p></div>
-          </div>
-          <p class="review__stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 100 20" aria-hidden="true"><use href="#stars"/></svg></p>
-          <blockquote>Переживал за сертификацию и ЭПТС на гибрид. Документы оформили сами, я только подписал акт приёмки. По цене вышло заметно выгоднее, чем у дилеров в Москве.</blockquote>
-          <p class="review__route">Владивосток <span aria-hidden="true"></span> Москва</p>
-        </li>
-      </ul>
+      <ul class="review-list"></ul>
     </div>
+    <template id="tpl-review">
+      <li class="review">
+        <div class="review__who">
+          <span class="review__avatar" aria-hidden="true"></span>
+          <div><h3></h3><p></p></div>
+        </div>
+        <p class="review__stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 100 20" aria-hidden="true"><use href="#stars"/></svg></p>
+        <blockquote></blockquote>
+        <p class="review__route">Владивосток <span aria-hidden="true"></span> <b></b></p>
+      </li>
+    </template>
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
       <symbol id="stars" viewBox="0 0 100 20"><path id="star" d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6L10 15l-5.4 3 1.2-6L1.3 7.8l6.1-.7z"/><use href="#star" x="20"/><use href="#star" x="40"/><use href="#star" x="60"/><use href="#star" x="80"/></symbol>
     </svg>
+  </section>
+
+  <section class="faq" id="faq" aria-labelledby="faq-title">
+    <div class="container faq__inner">
+      <h2 id="faq-title" class="h2">Частые вопросы<span class="dot">.</span></h2>
+      <div class="faq__list">
+        <details>
+          <summary>Что входит в стоимость под ключ?</summary>
+          <p>Цена машины на аукционе или у дилера, сборы площадки, доставка до Владивостока, таможенные платежи и утильсбор, СБКТС и ЭПТС, доставка до вашего города и наша работа. Все статьи расписываем в смете до покупки.</p>
+        </details>
+        <details>
+          <summary>Сколько ждать машину?</summary>
+          <p>Зависит от страны, площадки и расстояния от Владивостока. Срок для вашего варианта называем при расчёте и сообщаем, где машина, на каждом этапе. Авто из наличия ждать не нужно.</p>
+        </details>
+        <details>
+          <summary>Можно ли посмотреть машину до покупки?</summary>
+          <p>Да. По каждому варианту присылаем фото, видео и отчёт о состоянии, по японским лотам — ещё и аукционный лист с оценкой. Машину выкупаем только после вашего согласия.</p>
+        </details>
+        <details>
+          <summary>Как вы гарантируете сделку?</summary>
+          <p>Работаем по договору. В нём фиксируем машину, порядок оплаты и сроки. При получении вы осматриваете авто и подписываете акт приёмки.</p>
+        </details>
+        <details>
+          <summary>Кто занимается растаможкой и документами?</summary>
+          <p>Мы. Проходим таможню, оформляем СБКТС и ЭПТС. Вы получаете машину с документами для постановки на учёт.</p>
+        </details>
+        <details>
+          <summary>Правый руль — это проблема?</summary>
+          <p>Нет. Праворульные машины из Японии ставятся на учёт в России как обычно. Если нужен левый руль, подберём авто из Кореи или Китая.</p>
+        </details>
+        <details>
+          <summary>Доставляете в мой город?</summary>
+          <p>Да, в любой город России: автовозом или по железной дороге. Стоимость доставки сразу включаем в расчёт.</p>
+        </details>
+      </div>
+    </div>
   </section>
 
   <section class="lead" id="lead" aria-labelledby="lead-title">

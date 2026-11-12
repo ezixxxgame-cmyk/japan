@@ -291,6 +291,41 @@
   document.fonts?.ready.then(() => { cache = null; if (reduce) scene(ctx, Infinity); });
 })();
 
+// Cars in stock and reviews come from data.json, edited via the Telegram bot (api/bot.js).
+// A section and its nav link stay hidden while its list is empty.
+(async () => {
+  let data;
+  try { data = await (await fetch('data.json')).json(); } catch { return; }
+  const rub = n => new Intl.NumberFormat('ru-RU').format(n) + ' ₽';
+  const card = (tpl, fields) => {
+    const el = document.getElementById(tpl).content.firstElementChild.cloneNode(true);
+    for (const sel in fields) el.querySelector(sel).textContent = fields[sel];
+    return el;
+  };
+  const show = (id, items, render) => {
+    if (!items?.length) return;
+    document.querySelector(`#${id} ul`).append(...items.map(render));
+    document.querySelectorAll(`#${id}, a[href="#${id}"]`).forEach(el => (el.hidden = false));
+  };
+  const request = document.querySelector('.form textarea');
+
+  show('stock', data.cars, c => {
+    const el = card('tpl-car', { h3: c.title, '.car__price b': rub(c.price), '.car__text': c.text });
+    const img = el.querySelector('img');
+    if (c.photo) { img.src = c.photo; img.alt = c.title; } else img.remove();
+    el.querySelector('a').addEventListener('click', () => { request.value = `${c.title} из наличия, ${rub(c.price)}`; });
+    return el;
+  });
+  show('reviews', data.reviews, r => {
+    const el = card('tpl-review', {
+      h3: r.name, '.review__who p': r.car, blockquote: r.text, '.review__route b': r.city,
+      '.review__avatar': r.name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase(),
+    });
+    if (!r.city) el.querySelector('.review__route').remove();
+    return el;
+  });
+})();
+
 // Lead form: client-side validation only.
 // ponytail: no backend yet — wire submit to Telegram bot / CRM / email when the channel is chosen.
 (() => {
